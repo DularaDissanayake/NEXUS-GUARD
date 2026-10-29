@@ -32,13 +32,10 @@ from pydantic import BaseModel, Field, field_validator, EmailStr
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from motor.motor_asyncio import AsyncIOMotorClient
-from passlib.context import CryptContext
-import bcrypt
 
-from routers import auth, image_analysis
+from routers import auth, image_analysis, website_detector, quiz, chat_assistant
 
 
 logging.basicConfig(level=logging.INFO)
@@ -185,7 +182,9 @@ def health_check():
 
 app.include_router(auth.router, tags=["Authentication"])
 app.include_router(image_analysis.router, tags=["Image Analysis"])
-
+app.include_router(website_detector.router, tags=["Website Detector"])
+app.include_router(quiz.router, prefix="/quiz", tags=["Quiz"])
+app.include_router(chat_assistant.router, prefix="/chat", tags=["Chat Assistant"])
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(request: EmailRequest):
